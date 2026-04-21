@@ -20,7 +20,6 @@ public class DownloadProgressDialog {
     }
 
     private void create() {
-        if (dialog != null) return;
         dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -32,6 +31,9 @@ public class DownloadProgressDialog {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         }
+        
+        // 默认隐藏取消按钮
+        dialog.findViewById(R.id.LLBottomBar).setVisibility(View.GONE);
     }
 
     public void show() {
@@ -49,16 +51,23 @@ public class DownloadProgressDialog {
     public void show(int textResId, final Runnable onCancelCallback) {
         if (isShowing()) return;
         close();
-        if (dialog == null) create();
+        create(); // 每次都重新创建，确保布局正确初始化
 
         if (textResId > 0) ((TextView)dialog.findViewById(R.id.TextView)).setText(textResId);
 
         setProgress(0);
+        android.util.Log.d("DownloadProgress", "onCancelCallback is null: " + (onCancelCallback == null));
         if (onCancelCallback != null) {
-            dialog.findViewById(R.id.BTCancel).setOnClickListener((v) -> onCancelCallback.run());
+            android.util.Log.d("DownloadProgress", "Setting up cancel button");
+            dialog.findViewById(R.id.BTCancel).setOnClickListener((v) -> {
+                android.util.Log.d("DownloadProgress", "Cancel button clicked");
+                onCancelCallback.run();
+            });
             dialog.findViewById(R.id.LLBottomBar).setVisibility(View.VISIBLE);
+            android.util.Log.d("DownloadProgress", "Bottom bar visibility set to VISIBLE");
         }
         dialog.show();
+        android.util.Log.d("DownloadProgress", "Dialog shown");
     }
 
     public void setProgress(int progress) {
@@ -72,6 +81,7 @@ public class DownloadProgressDialog {
         try {
             if (dialog != null) {
                 dialog.dismiss();
+                dialog = null; // 重置为 null，确保下次 show 时重新创建
             }
         }
         catch (Exception e) {}

@@ -61,14 +61,26 @@
             android:id="@+id/LLBottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
 
             <View style="@style/HorizontalLine" />
 
-            <Button
-                style="@style/ButtonNeutral"
-                android:text="@string/cancel"
-                android:id="@+id/BTCancel" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    style="@style/ButtonNeutral"
+                    android:text="@string/cancel"
+                    android:id="@+id/BTCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="80dp"
+                    android:layout_gravity="end" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

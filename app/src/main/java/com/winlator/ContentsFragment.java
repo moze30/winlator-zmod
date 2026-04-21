@@ -175,6 +175,9 @@ public class ContentsFragment extends Fragment {
             final Activity activity = getActivity();
             if (activity == null) return;
 
+            // 获取源文件路径，用于后续清理
+            final File sourceFile = new File(data.getData().getPath());
+            
             DownloadProgressDialog progressDialog = new DownloadProgressDialog(activity);
             progressDialog.show(R.string.installing_content);
             try {
@@ -207,6 +210,10 @@ public class ContentsFragment extends Fragment {
                                 msgId = R.string.unable_to_install_content;
                                 break;
                         }
+                        // 清理源文件
+                        if (sourceFile.exists()) {
+                            sourceFile.delete();
+                        }
                         safeRunOnUiThread(() -> ContentDialog.alert(getContext(), activity.getString(R.string.install_failed) + ": " + activity.getString(msgId), progressDialog::closeOnUiThread));
                     }
 
@@ -223,16 +230,32 @@ public class ContentsFragment extends Fragment {
                                     List<ContentProfile.ContentFile> untrustedFiles = manager.getUnTrustedContentFiles(profile);
                                     if (!untrustedFiles.isEmpty()) {
                                         ContentUntrustedDialog untrustedDialog = new ContentUntrustedDialog(getContext(), untrustedFiles);
-                                        untrustedDialog.setOnCancelCallback(progressDialog::closeOnUiThread);
+                                        untrustedDialog.setOnCancelCallback(() -> {
+                                            // 取消时清理源文件
+                                            if (sourceFile.exists()) {
+                                                sourceFile.delete();
+                                            }
+                                            progressDialog.closeOnUiThread();
+                                        });
                                         untrustedDialog.setOnConfirmCallback(() -> manager.finishInstallContent(profile, callback1));
                                         untrustedDialog.show();
                                     } else manager.finishInstallContent(profile, callback1);
                                 });
-                                dialog.setOnCancelCallback(progressDialog::closeOnUiThread);
+                                dialog.setOnCancelCallback(() -> {
+                                    // 取消时清理源文件
+                                    if (sourceFile.exists()) {
+                                        sourceFile.delete();
+                                    }
+                                    progressDialog.closeOnUiThread();
+                                });
                                 dialog.show();
                             });
 
                         } else {
+                            // 安装成功后清理源文件
+                            if (sourceFile.exists()) {
+                                sourceFile.delete();
+                            }
                             progressDialog.closeOnUiThread();
                             safeRunOnUiThread(() -> {
                                 ContentDialog.alert(getContext(), R.string.content_installed_success, null);
@@ -247,6 +270,10 @@ public class ContentsFragment extends Fragment {
                 };
                 Executors.newSingleThreadExecutor().execute(() -> manager.extraContentFile(data.getData(), callback, progress -> safeRunOnUiThread(() -> progressDialog.setProgress(progress))));
             } catch (Exception e) {
+                // 异常时清理源文件
+                if (sourceFile.exists()) {
+                    sourceFile.delete();
+                }
                 progressDialog.closeOnUiThread();
                 AppUtils.showToast(getContext(), R.string.unable_to_import_profile);
             }
@@ -370,7 +397,14 @@ public class ContentsFragment extends Fragment {
                     long timestamp = System.currentTimeMillis();
                     File output = new File(context.getCacheDir(), "temp_" + timestamp);
                     
-                    if (Downloader.downloadFile(profile.remoteUrl, output, progress -> safeRunOnUiThread(() -> progressDialog.setProgress(progress)), isCancelled)) {
+                    boolean success = Downloader.downloadFile(profile.remoteUrl, output, progress -> safeRunOnUiThread(() -> progressDialog.setProgress(progress)), isCancelled);
+                    
+                    // 清理残留文件（无论成功与否）
+                    if (!success && output.exists()) {
+                        output.delete();
+                    }
+                    
+                    if (success) {
                         safeRunOnUiThread(() -> {
                             progressDialog.close();
                             final Intent intent = new Intent();
