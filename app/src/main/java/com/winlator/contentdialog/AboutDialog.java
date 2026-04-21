@@ -19,13 +19,19 @@ public class AboutDialog extends ContentDialog {
             final PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 
             TextView tvWebpage = findViewById(R.id.TVWebpage);
-            tvWebpage.setText(Html.fromHtml("<a href=\"https://www.winlator.org\">winlator.org</a>", Html.FROM_HTML_MODE_LEGACY));
+            tvWebpage.setText(Html.fromHtml("<a href=\"https://github.com/moze30/winlator-mcn\">moze30/winlator-zmod</a>", Html.FROM_HTML_MODE_LEGACY));
             tvWebpage.setMovementMethod(LinkMovementMethod.getInstance());
+
+         
+            TextView tvModifiedBy = findViewById(R.id.TVModifiedBy);
+            tvModifiedBy.setText(Html.fromHtml("MOZE30 (<a href=\"https://github.com/moze30\">github.com/moze30</a>)", Html.FROM_HTML_MODE_LEGACY));
+            tvModifiedBy.setMovementMethod(LinkMovementMethod.getInstance());
 
             ((TextView)findViewById(R.id.TVAppVersion)).setText(context.getString(R.string.version)+" "+pInfo.versionName);
 
             String creditsAndThirdPartyAppsHTML = String.join("<br />",
                 "Hostei Mod(<a href=\"http://52emu.cn\">52emu.cn</a>)",
+                "brunodev85/winlator (<a href=\"https://github.com/brunodev85/winlator\">Winlator</a>)",
                 "GLIBC Patches by (<a href=\"https://github.com/termux-pacman/glibc-packages\">Termux Pacman</a>)",
                 "Wine (<a href=\"https://www.winehq.org\">winehq.org</a>)",
                 "Box86/Box64 by <a href=\"https://github.com/ptitSeb\">ptitseb</a>",

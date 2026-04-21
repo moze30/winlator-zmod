@@ -2,17 +2,13 @@
 	<img src="logo.png" width="376" height="128" alt="Winlator Logo" />
 </p>
 
-# Winlator-CN
+# Winlator-Zmod
 
-Winlator-CN为Winlator的改版，可通过 Wine 和 Box86/Box64 运行 Windows（x86_64）应用程序。
+Winlator-Zmod为Winlator的改版，可通过 Wine 和 Box86/Box64 运行 Windows（x86_64）应用程序。
 本仓库用于存放 Winlator 应用源码的最新更新内容。
-如需了解更多信息及下载发行版，请访问：http://52emu.cn
-
-# 说明
-本仓库将与我们的[Winlator-CN主仓库](https://github.com/Tux-And-Wine/winlator-cn)同步更新，此仓库与主仓库的区别是我会在其中加入实验性功能，通过测试后才会合并到主仓库。
 
 # 致谢与第三方项目
-- 原项目 https://github.com/brunodev85/winlator
+- 原仓库 [Winlator](https://github.com/brunodev85/winlator)
 - GLIBC Patches by [Termux Pacman](https://github.com/termux-pacman/glibc-packages)
 - Wine ([winehq.org](https://www.winehq.org/))
 - Box86/Box64 by [ptitseb](https://github.com/ptitSeb)
