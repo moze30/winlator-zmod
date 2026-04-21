@@ -394,4 +394,10 @@
     <string name="content_installed_success">附加内容安装成功！</string>
     <string name="do_you_want_to_remove_this_content">您想删除此附加内容吗？</string>
     <string name="unable_to_remove_content_since_container_using">无法删除附加内容，因为容器 %s 正在使用它</string>
+    <string name="terminal">终端</string>
+    <string name="export_terminal_output">导出输出</string>
+    <string name="real_time_log">实时日志</string>
+    <string name="terminal_output_exported">终端输出已导出到</string>
+    <string name="export_failed">导出失败</string>
+    <string name="clear">清屏</string>
 </resources>

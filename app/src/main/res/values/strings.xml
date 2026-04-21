@@ -397,4 +397,10 @@
     <string name="content_installed_success">Content installed successfully!</string>
     <string name="do_you_want_to_remove_this_content">Do you want to remove this content?</string>
     <string name="unable_to_remove_content_since_container_using">Unable to remove content since container %s is using it</string>
+    <string name="terminal">Terminal</string>
+    <string name="export_terminal_output">Export Output</string>
+    <string name="real_time_log">Real-time Log</string>
+    <string name="terminal_output_exported">Terminal output exported to</string>
+    <string name="export_failed">Export failed</string>
+    <string name="clear">Clear</string>
 </resources>
