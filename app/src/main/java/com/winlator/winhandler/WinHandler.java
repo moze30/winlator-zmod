@@ -242,10 +242,13 @@ public class WinHandler {
     }
 
     private void startSendThread() {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppThreadPool.getExecutorService().execute(() -> {
             while (running) {
                 synchronized (actions) {
-                    while (initReceived && !actions.isEmpty()) actions.poll().run();
+                    while (initReceived && !actions.isEmpty()) {
+                        Runnable action = actions.poll();
+                        if (action != null) action.run();
+                    }
                     try {
                         actions.wait();
                     }
@@ -369,7 +372,7 @@ public class WinHandler {
 
         running = true;
         startSendThread();
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppThreadPool.getExecutorService().execute(() -> {
             try {
                 socket = new DatagramSocket(null);
                 socket.setReuseAddress(true);

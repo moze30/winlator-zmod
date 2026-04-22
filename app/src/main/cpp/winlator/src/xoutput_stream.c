@@ -3,6 +3,8 @@
 #include <jni.h>
 #include <unistd.h>
 
+#include <errno.h>
+#include <android/log.h>
 #include "winlator.h"
 #include "socket_utils.h"
 
@@ -20,11 +22,13 @@ typedef struct XOutputStream {
 static void ensureSpaceIsAvailable(XOutputStream* outputStream, int length) {
     if ((outputStream->buffer.capacity - outputStream->buffer.position) >= length) return;
 
-    int newCapacity = outputStream->buffer.capacity + length;
+    int newCapacity = outputStream->buffer.capacity + (length > outputStream->buffer.capacity ? length : outputStream->buffer.capacity);
     void* newData = realloc(outputStream->buffer.data, newCapacity);
-    outputStream->buffer.capacity = newCapacity;
-    outputStream->buffer.limit = newCapacity;
-    outputStream->buffer.data = newData;
+    if (newData) {
+        outputStream->buffer.capacity = newCapacity;
+        outputStream->buffer.limit = newCapacity;
+        outputStream->buffer.data = newData;
+    }
 }
 
 static XOutputStream* XOutputStream_allocate(int fd, int initialCapacity) {
@@ -53,6 +57,10 @@ static jboolean XOutputStream_send(XOutputStream* outputStream) {
         outputStream->ancillaryFd = 0;
     }
     else bytesSent = write(outputStream->fd, outputStream->buffer.data, outputStream->buffer.limit);
+
+    if (bytesSent < 0) {
+        __android_log_print(ANDROID_LOG_WARN, "Winlator", "XOutputStream_send failed for fd %d: %s", outputStream->fd, strerror(errno));
+    }
 
     outputStream->buffer.limit = outputStream->buffer.capacity;
     return bytesSent >= 0 ? JNI_TRUE : JNI_FALSE;

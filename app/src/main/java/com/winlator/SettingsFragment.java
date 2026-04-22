@@ -351,7 +351,7 @@ public class SettingsFragment extends Fragment {
         }
 
         preloaderDialog.show(R.string.removing_wine);
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppThreadPool.getExecutorService().execute(() -> {
             FileUtils.delete(wineDir);
             FileUtils.delete(containerPatternFile);
             preloaderDialog.closeOnUiThread();

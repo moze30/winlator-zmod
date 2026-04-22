@@ -53,7 +53,7 @@ public abstract class RootFSInstaller {
 
         final DownloadProgressDialog dialog = new DownloadProgressDialog(activity);
         dialog.show(R.string.installing_system_files);
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppThreadPool.getExecutorService().execute(() -> {
             clearRootDir(rootDir);
             final long contentLength = TarCompressorUtils.getContentLength(TarCompressorUtils.Type.ZSTD, activity, FILENAME, rootDir);
             AtomicLong totalSizeRef = new AtomicLong();
@@ -115,7 +115,7 @@ public abstract class RootFSInstaller {
         AppUtils.keepScreenOn(activity);
         PreloaderDialog preloaderDialog = new PreloaderDialog(activity);
         preloaderDialog.show(R.string.loading);
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppThreadPool.getExecutorService().execute(() -> {
             File[] srcFiles, dstFiles;
             File rootDir = RootFS.find(activity).getRootDir();
             File wineSystem32Dir = new File(rootDir, "/opt/wine/lib/wine/x86_64-windows");

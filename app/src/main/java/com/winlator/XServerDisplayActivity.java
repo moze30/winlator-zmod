@@ -299,7 +299,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         setupUI();
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppThreadPool.getExecutorService().execute(() -> {
             if (!isGenerateWineprefix()) {
                 setupWineSystemFiles();
                 extractGraphicsDriverFiles();
@@ -433,7 +433,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             drawerLayout.closeDrawers();
         }
         else if (itemId == R.id.menu_item_fix_perms) {
-            Executors.newSingleThreadExecutor().execute(() -> {
+            AppThreadPool.getExecutorService().execute(() -> {
                 try {
                     Runtime.getRuntime().exec(new String[]{"chmod", "-R", "777", rootFS.getRootDir().getAbsolutePath()});
                 } catch (Exception e) {}

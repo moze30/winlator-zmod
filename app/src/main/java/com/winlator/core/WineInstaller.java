@@ -39,7 +39,7 @@ public abstract class WineInstaller {
         guestProgramLauncherComponent.setGuestExecutable("wine explorer /desktop=shell,"+ Container.DEFAULT_SCREEN_SIZE+" C:\\windows\\system32\\winecfg.exe");
 
         final PreloaderDialog preloaderDialog = new PreloaderDialog(activity);
-        guestProgramLauncherComponent.setTerminationCallback((status) -> Executors.newSingleThreadExecutor().execute(() -> {
+        guestProgramLauncherComponent.setTerminationCallback((status) -> AppThreadPool.getExecutorService().execute(() -> {
             if (status > 0) {
                 AppUtils.showToast(activity, R.string.unable_to_install_wine);
                 FileUtils.delete(new File(installedWineDir, "/preinstall"));
@@ -80,7 +80,7 @@ public abstract class WineInstaller {
     }
 
     public static void extractWineFileForInstallAsync(Context context, Uri uri, Callback<File> callback) {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        AppThreadPool.getExecutorService().execute(() -> {
             File destination = new File(RootFS.find(context).getInstalledWineDir(), "/preinstall/wine");
             FileUtils.delete(destination);
             destination.mkdirs();

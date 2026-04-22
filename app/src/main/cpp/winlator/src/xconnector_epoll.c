@@ -179,6 +179,7 @@ static void XConnectorEpoll_killConnection(XConnectorEpoll* connector, Connected
         (*jmethods->env)->CallVoidMethod(jmethods->env, jmethods->obj, jmethods->handleConnectionShutdown, client->tag);
         client->tag = NULL;
     }
+    free(client);
 }
 
 static void* pollThread(void* param) {

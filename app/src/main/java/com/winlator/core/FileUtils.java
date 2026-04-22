@@ -173,12 +173,11 @@ public abstract class FileUtils {
             File parent = dstFile.getParentFile();
             if (!srcFile.exists() || (parent != null && !parent.exists() && !parent.mkdirs())) return false;
 
-            try {
-                FileChannel inChannel = (new FileInputStream(srcFile)).getChannel();
-                FileChannel outChannel = (new FileOutputStream(dstFile)).getChannel();
+            try (FileInputStream fis = new FileInputStream(srcFile);
+                 FileOutputStream fos = new FileOutputStream(dstFile)) {
+                FileChannel inChannel = fis.getChannel();
+                FileChannel outChannel = fos.getChannel();
                 inChannel.transferTo(0, inChannel.size(), outChannel);
-                inChannel.close();
-                outChannel.close();
 
                 if (callback != null) callback.call(dstFile);
                 return dstFile.exists();
@@ -319,7 +318,7 @@ public abstract class FileUtils {
     }
 
     public static void getSizeAsync(File file, Callback<Long> callback) {
-        Executors.newSingleThreadExecutor().execute(() -> getSize(file, callback));
+        AppThreadPool.getExecutorService().execute(() -> getSize(file, callback));
     }
 
     private static void getSize(File file, Callback<Long> callback) {

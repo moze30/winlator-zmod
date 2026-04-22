@@ -346,12 +346,7 @@ public abstract class AppUtils {
 
     public static void runDelayed(final Runnable callback, long delay) {
         if (callback == null) return;
-        (new Timer()).schedule(new TimerTask() {
-            @Override
-            public void run() {
-                callback.run();
-            }
-        }, delay);
+        AppThreadPool.getScheduledExecutorService().schedule(callback, delay, java.util.concurrent.TimeUnit.MILLISECONDS);
     }
 
     public static TextView createDebugMsgTextView(Context context) {
