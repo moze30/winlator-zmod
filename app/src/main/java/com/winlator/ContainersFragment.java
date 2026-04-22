@@ -145,34 +145,33 @@ public class ContainersFragment extends Fragment {
             listItemMenu.getMenu().removeItem(R.id.menu_item_backup);
 
             listItemMenu.setOnMenuItemClickListener((menuItem) -> {
-                switch (menuItem.getItemId()) {
-                    case R.id.menu_item_file_manager:
-                        activity.showFragment(new ContainerFileManagerFragment(container.id));
-                        break;
-                    case R.id.menu_item_edit:
-                        activity.showFragment(new ContainerDetailFragment(container.id));
-                        break;
-                    case R.id.menu_item_duplicate:
-                        ContentDialog.confirm(getContext(), R.string.do_you_want_to_duplicate_this_container, () -> {
-                            preloaderDialog.show(R.string.duplicating_container);
-                            manager.duplicateContainerAsync(container, () -> {
-                                preloaderDialog.close();
-                                loadContainersList();
-                            });
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.menu_item_file_manager) {
+                    activity.showFragment(new ContainerFileManagerFragment(container.id));
+                }
+                else if (itemId == R.id.menu_item_edit) {
+                    activity.showFragment(new ContainerDetailFragment(container.id));
+                }
+                else if (itemId == R.id.menu_item_duplicate) {
+                    ContentDialog.confirm(getContext(), R.string.do_you_want_to_duplicate_this_container, () -> {
+                        preloaderDialog.show(R.string.duplicating_container);
+                        manager.duplicateContainerAsync(container, () -> {
+                            preloaderDialog.close();
+                            loadContainersList();
                         });
-                        break;
-                    case R.id.menu_item_remove:
-                        ContentDialog.confirm(getContext(), R.string.do_you_want_to_remove_this_container, () -> {
-                            preloaderDialog.show(R.string.removing_container);
-                            manager.removeContainerAsync(container, () -> {
-                                preloaderDialog.close();
-                                loadContainersList();
-                            });
+                    });
+                }
+                else if (itemId == R.id.menu_item_remove) {
+                    ContentDialog.confirm(getContext(), R.string.do_you_want_to_remove_this_container, () -> {
+                        preloaderDialog.show(R.string.removing_container);
+                        manager.removeContainerAsync(container, () -> {
+                            preloaderDialog.close();
+                            loadContainersList();
                         });
-                        break;
-                    case R.id.menu_item_info:
-                        (new StorageInfoDialog(activity, container)).show();
-                        break;
+                    });
+                }
+                else if (itemId == R.id.menu_item_info) {
+                    (new StorageInfoDialog(activity, container)).show();
                 }
                 return true;
             });

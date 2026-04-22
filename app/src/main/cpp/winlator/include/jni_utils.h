@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <android/log.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 #define JSIGNATURE_STRING "Ljava/lang/String;"
 #define JSIGNATURE_ARRAY_STRING "[Ljava/lang/String;"

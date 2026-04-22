@@ -37,6 +37,9 @@
 
 #include <unistd.h>
 #include <syscall.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 static inline pid_t currentThreadId() {
 #ifdef __ANDROID__

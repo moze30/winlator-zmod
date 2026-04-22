@@ -2,6 +2,9 @@
 #define WINLATOR_SOCKET_UTILS_H
 
 #include <sys/socket.h>
+#include <unistd.h>
+#include <stddef.h>
+#include <stdlib.h>
 
 #define MAX_FDS 32
 

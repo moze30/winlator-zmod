@@ -2,6 +2,8 @@
 #define WINLATOR_TIME_UTILS_H
 
 #include <sys/time.h>
+#include <time.h>
+#include <stdint.h>
 
 #define NSEC_PER_SEC 1000000000UL
 

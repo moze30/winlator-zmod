@@ -1,8 +1,15 @@
 #ifndef WINLATOR_ARRAYS_H
 #define WINLATOR_ARRAYS_H
 
-#include <malloc.h>
+#include <stdio.h>
 #include <stdbool.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <limits.h>
 
 typedef struct ArrayBuffer {
     int size;

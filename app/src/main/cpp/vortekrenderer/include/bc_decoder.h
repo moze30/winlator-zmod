@@ -2,6 +2,9 @@
 
 #ifndef BC_DECODER_H
 #define BC_DECODER_H
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 #define BC_BLOCK 4u
 #define BC_DECODER_NUM_TASKS 4

@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    namespace 'com.winlator'
+    compileSdk 36
 
     defaultConfig {
         applicationId 'com.winlator'
@@ -14,7 +15,7 @@ android {
     buildTypes {
         debug {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             ndk {
                 abiFilters 'arm64-v8a'
@@ -26,16 +27,23 @@ android {
         checkReleaseBuilds false
     }
 
-    ndkVersion '24.0.8215888'
+    androidResources {
+        noCompress 'txz', 'tzst'
+    }
+
+    ndkVersion '30.0.14904198'
 
     externalNativeBuild {
         cmake {
-            version '3.22.1'
+            version '4.1.2'
             path 'src/main/cpp/CMakeLists.txt'
         }
     }
 
-    packagingOptions {
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
         pickFirst 'lib/arm64-v8a/libFLAC.so'
         pickFirst 'lib/arm64-v8a/libc++_shared.so'
         pickFirst 'lib/arm64-v8a/libfluidsynth.so'
@@ -56,14 +64,15 @@ android {
         pickFirst 'lib/arm64-v8a/libvorbisenc.so'
         pickFirst 'lib/arm64-v8a/libvorbisfile.so'
     }
+    compileSdkMinor 1
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.preference:preference:1.2.1'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.13.0'
     implementation 'com.github.luben:zstd-jni:1.5.7-7@aar'
-    implementation 'org.tukaani:xz:1.9'
-    implementation 'org.apache.commons:commons-compress:1.27.0'
+    implementation 'org.tukaani:xz:1.12'
+    implementation 'org.apache.commons:commons-compress:1.28.0'
 }

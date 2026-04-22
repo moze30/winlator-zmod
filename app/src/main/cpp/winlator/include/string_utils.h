@@ -3,6 +3,11 @@
 
 #include <ctype.h>
 #include <stdarg.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <wchar.h>
 
 #include "arrays.h"
 
