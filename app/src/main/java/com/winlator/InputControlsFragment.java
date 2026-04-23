@@ -48,7 +48,6 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InputControlsFragment extends Fragment {
-    private static final String INPUT_CONTROLS_URL = "http://cdn4.52emu.cn/wlt/v10/input_controls/%s";
     private InputControlsManager manager;
     private ControlsProfile currentProfile;
     private Runnable updateLayout;
@@ -173,20 +172,7 @@ public class InputControlsFragment extends Fragment {
         });
 
         view.findViewById(R.id.BTImportProfile).setOnClickListener((v) -> {
-            PopupMenu popupMenu = new PopupMenu(context, v);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) popupMenu.setForceShowIcon(true);
-            popupMenu.inflate(R.menu.open_file_popup_menu);
-            popupMenu.setOnMenuItemClickListener((menuItem) -> {
-                int itemId = menuItem.getItemId();
-                if (itemId == R.id.menu_item_open_file) {
-                    openProfileFile(sProfile);
-                }
-                else if (itemId == R.id.menu_item_download_file) {
-                    downloadProfileList(sProfile);
-                }
-                return true;
-            });
-            popupMenu.show();
+            openProfileFile(sProfile);
         });
 
         view.findViewById(R.id.BTExportProfile).setOnClickListener((v) -> {
@@ -222,46 +208,6 @@ public class InputControlsFragment extends Fragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         getActivity().startActivityFromFragment(this, intent, MainActivity.OPEN_FILE_REQUEST_CODE);
-    }
-
-    private void downloadSelectedProfiles(final Spinner sProfile, String[] items, final ArrayList<Integer> positions) {
-        final MainActivity activity = (MainActivity)getActivity();
-        activity.preloaderDialog.show(R.string.downloading_file);
-        currentProfile = null;
-        final AtomicInteger processedItemCount = new AtomicInteger();
-
-        for (int position : positions) {
-            HttpUtils.download(String.format(INPUT_CONTROLS_URL, items[position]), (content) -> {
-                try {
-                    if (content != null) manager.importProfile(new JSONObject(content));
-                }
-                catch (JSONException e) {}
-                if (processedItemCount.incrementAndGet() == positions.size()) {
-                    activity.runOnUiThread(() -> {
-                        activity.preloaderDialog.close();
-                        loadProfileSpinner(sProfile);
-                        updateLayout.run();
-                    });
-                }
-            });
-        }
-    }
-
-    private void downloadProfileList(final Spinner sProfile) {
-        final MainActivity activity = (MainActivity)getActivity();
-        activity.preloaderDialog.show(R.string.loading);
-        HttpUtils.download(String.format(INPUT_CONTROLS_URL, "index.txt"), (content) -> activity.runOnUiThread(() -> {
-            activity.preloaderDialog.close();
-            if (content != null) {
-                final String[] items = content.split("\n");
-                ContentDialog.showSelectionList(activity, R.string.import_profile, items, true, (positions) -> {
-                    if (!positions.isEmpty()) {
-                        ContentDialog.confirm(activity, R.string.do_you_want_to_download_the_selected_profiles, () -> downloadSelectedProfiles(sProfile, items, positions));
-                    }
-                });
-            }
-            else AppUtils.showToast(activity, R.string.a_network_error_occurred);
-        }));
     }
 
     @Override
